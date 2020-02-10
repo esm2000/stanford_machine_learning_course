@@ -13,8 +13,16 @@ J = 0;
 % Instructions: Compute the cost of a particular choice of theta
 %               You should set J to the cost.
 
+    % get the number of training examples
+    m = length(y);
 
+    % make predictions based on existing parameters and data
+    hypothesis = X * theta;
 
+    % calculate the squared error 
+    sqError = (hypothesis - y) .^ 2 ;
+
+    J = sum(sqError) / ( 2 * m );
 
 
 % =========================================================================
