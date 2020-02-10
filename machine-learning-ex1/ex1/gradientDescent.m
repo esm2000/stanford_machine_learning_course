@@ -17,10 +17,19 @@ for iter = 1:num_iters
     %       of the cost function (computeCost) and gradient here.
     %
 
+    % set the number of training examples
+    m = length(y);
 
+    % make predictions based on the parameters and data 
+    hypothesis = X * theta;
 
+    % calculate the error 
+    error = hypothesis - y;
 
+    % update theta
+    theta(1,1) = theta(1,1) - (alpha * ( 1 / m ) * sum( error ))
 
+    theta(2,1) = theta(2,1) - (alpha * ( 1 / m ) * sum( error' * X(:,2)))
 
 
     % ============================================================
