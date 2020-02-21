@@ -26,6 +26,19 @@ sigma = zeros(1, size(X, 2));
 % Hint: You might find the 'mean' and 'std' functions useful.
 %       
 
+% calculate the number of features
+sizeOfX = size(X)
+m = sizeOfX(1,1)
+
+% sum up each observation in every feature
+sum = sum(X, 1)
+
+% compute the mean form the sum
+mean = sum / m 
+
+disp('size of mean')
+disp(mean)
+
 
 
 
