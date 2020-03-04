@@ -63,50 +63,35 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
-x_ones = ones(m, 1);
-X = [x_ones, X];
-
+I = eye(num_labels);
+Y = zeros(m, num_labels);
 for i = 1:m
+  Y(i, :) = I(y(i), :);
+end
 
-    % encoding y 
-    yk = zeros(num_labels, 1);
-    ans = y(i, 1);
-    yk(ans, 1) = 1;
+A1 = [ones(m, 1) X];
+Z2 = A1 * Theta1';
+A2 = [ones(size(Z2, 1), 1) sigmoid(Z2)];
+Z3 = A2 * Theta2';
+H = A3 = sigmoid(Z3);
 
-    % forward propagation 
-    x = X(i, :);
-    a1 = x;
+% step 1 Feedforward and cost function
+J = (1 / m) * sum(sum((-Y) .* log(H) - (1 - Y) .* log(1 - H), 2));
 
-    z2 = x * Theta1';
-    a2 = sigmoid(z2);
-    a2 = [1, a2];
+% step 2 Regularized cost function
+penalty = (lambda / (2 * m)) * (sum(sum(Theta1(:, 2:end) .^ 2, 2)) + sum(sum(Theta2(:, 2:end) .^ 2, 2)));
+J = J + penalty;
 
-    z3 = a2 * Theta2';
-    a3 = sigmoid(z3);
+% step 3 Neural Network Gradient (Backpropagation)
+Sigma3 = A3 - Y;
+Sigma2 = (Sigma3 * Theta2 .* sigmoidGradient([ones(size(Z2, 1), 1) Z2]))(:, 2:end);
 
-    hypothesis = a3;
-    
-    % calculation of the cost
-    t1 = ( -yk .* log( hypothesis' ) );
-    t2 = ( ( 1 - yk ) .* log( 1 - (hypothesis') ));
+Delta_1 = Sigma2' * A1;
+Delta_2 = Sigma3' * A2;
 
-    cost = sum ( t1 - t2);
-    
-    J = J + cost;
-
-    Theta1_rest = Theta1(:, 2:columns(Theta1));
-    Theta2_rest = Theta2(:, 2:columns(Theta2));
-
-    lambda_scalar =  ( lambda / ( 2 * m ) );
-    Theta1_squared_sum = sum( sum( ( Theta1_rest .^ 2 ), 1 ) );
-    Theta2_squared_sum = sum( sum( ( Theta2_rest .^ 2 ), 1 ) );
-    J = J + (lambda_scalar * ( Theta1_squared_sum + Theta2_squared_sum ));
-
-    
-
-end;
-
-J = ( 1 / m ) * J;
+% step 4 Regularized Gradient
+Theta1_grad = Delta_1 ./ m + (lambda / m)*[zeros(size(Theta1, 1), 1) Theta1(:, 2:end)];
+Theta2_grad = Delta_2 ./ m + (lambda / m)*[zeros(size(Theta2, 1), 1) Theta2(:, 2:end)];
 
 
 % -------------------------------------------------------------
