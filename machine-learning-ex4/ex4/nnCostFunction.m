@@ -68,10 +68,12 @@ X = [x_ones, X];
 
 for i = 1:m
 
+    % encoding y 
     yk = zeros(num_labels, 1);
     ans = y(i, 1);
     yk(ans, 1) = 1;
 
+    % forward propagation 
     x = X(i, :);
     a1 = x;
 
@@ -84,6 +86,7 @@ for i = 1:m
 
     hypothesis = a3;
     
+    % calculation of the cost
     t1 = ( -yk .* log( hypothesis' ) );
     t2 = ( ( 1 - yk ) .* log( 1 - (hypothesis') ));
 
@@ -98,6 +101,8 @@ for i = 1:m
     Theta1_squared_sum = sum( sum( ( Theta1_rest .^ 2 ), 1 ) );
     Theta2_squared_sum = sum( sum( ( Theta2_rest .^ 2 ), 1 ) );
     J = J + (lambda_scalar * ( Theta1_squared_sum + Theta2_squared_sum ));
+
+    
 
 end;
 
