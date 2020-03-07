@@ -24,11 +24,10 @@ hypothesis = X * theta;
 theta_rest = theta(2:end);
 J = ( 1 / ( 2 * m ) ) * sum( ( hypothesis - y ).^2 ) + ( lambda / ( 2 * m) ) * sum ( theta_rest.^2 );
 
+grad(1) = ( 1 / m ) * sum( ( hypothesis - y) .* X(:, 1) );
 
-
-
-
-
+grad(2:end) = ( ( 1 / m ) * sum( ( hypothesis - y) .* X(:, 2:end) ) );
+grad(2:end) = grad(2:end) + ( ( lambda / m ) .* theta_rest );
 
 
 % =========================================================================
