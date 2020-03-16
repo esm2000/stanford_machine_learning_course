@@ -23,11 +23,35 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+c_list = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
+sigma_list = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 
+% create a blank results matrix
+results = zeros(length(c_list) * length(sigma_list), 3);   
 
+row = 1;
+for c_val = c_list
+    for sigma_val = sigma_list
 
+        model = svmTrain(X, y, c_val, @(x1, x2) gaussianKernel(x1, x2, sigma_val)); 
 
+        ypred = svmPredict(model, Xval);
 
+        err_val = sum((ypred - yval).^2);
+
+        results(row,:) = [c_val sigma_val err_val];
+        row = row + 1;
+    endfor
+endfor
+
+% use the min() function on the results matrix to find 
+%   the C and sigma values that give the lowest validation error
+
+err_vals = results(:, 3);
+[minval, row] = min(min(err_vals,[],2));
+
+C = results(row, 1);
+sigma = results(row, 2);
 
 % =========================================================================
 
