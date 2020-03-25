@@ -21,7 +21,21 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
+m = size(X, 1);
 
+for i = 1:m
+    temp = zeros(size(K,1), 1);
+
+    for j = 1:K
+        vector = X(i,:) - centroids(j,:);
+        value = sqrt(sum(vector.^2));
+        value = value .^2;
+        temp(j, 1) = value;
+    endfor
+
+    [M, I] = min(temp);
+    idx(i, 1) = I;
+endfor
 
 
 
